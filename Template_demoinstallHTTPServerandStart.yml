@@ -2,6 +2,8 @@
 ---
 - hosts: all
   become: true
+  vars:
+    name: 'playbooks'
   tasks:
     - name: Install Apache HTTP server
       yum: name=httpd update_cache=yes state=latest
@@ -11,4 +13,14 @@
       template:
        src: index.html
        dest: /var/www/html/index.html
+      notify:
+      - Restart httpd
+  handlers:
+  - name: Restart httpd
+    service:
+      name: httpd
+      state: restarted
+      enabled: yes
+
 ...
+
